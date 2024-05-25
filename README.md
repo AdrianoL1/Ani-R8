@@ -65,9 +65,9 @@ A REST API developed with **Java** and **Spring Boot** that allows users to mana
 - [x] Personal user-anime lists
 - [x] Personal user-manga lists
 - [x] Add Swagger for documentation
-- Implement pagination and sorting
-- Enable filtering animes by genre, rating, and status
-- Build a frontend client (React)
+- [] Implement pagination and sorting
+- [] Enable filtering animes by genre, rating, and status
+- [] Build a frontend client (React)
 
 ## Contributing
 
