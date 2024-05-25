@@ -6,14 +6,14 @@ A REST API developed with **Java** and **Spring Boot** that allows users to mana
 ## Features
 
 - Following **MVCS** (Model-View-Controller-Service) and **DTO** (Data Transfer Object) design patterns for a clean architecture
-- User registration and management (to be implemented)
+- User registration and management
 - Anime catalog management
 - Genre management
-- Personal user-anime lists with: (to be implemented)
-  - Status (Watching, Plan to Watch, Paused, Completed, Dropped)
+- Personal user-anime lists with:
+  - Status (Watching, Plan to Watch, On-hold, Completed, Dropped)
   - Number of episodes watched
   - Personal ratings
-- Secure authentication with JWT (to be implemented)
+- Secure authentication with JWT
 
 ## Technologies Used
 
@@ -33,6 +33,8 @@ A REST API developed with **Java** and **Spring Boot** that allows users to mana
 - **Manga**: Represents a manga entry.
 - **manga_genre**: Represents an associative table for Mangas and Genres.
 - **UserAnime**: Represents the user's interaction with an anime.
+- **UserManga**: Represents the user's interaction with a manga.
+
 
 ![](https://github.com/AdrianoL1/Ani-R8/blob/main/static/db_diagram.png)
 
@@ -58,10 +60,11 @@ A REST API developed with **Java** and **Spring Boot** that allows users to mana
 
 ## TODO List
 
-- Add JWT Authentication for secure endpoints
-- User registration and login
-- Personal user-anime lists
-- Add Swagger for documentation
+- [x] Add JWT Authentication for secure endpoints
+- [x] User registration and login
+- [x] Personal user-anime lists
+- [x] Personal user-manga lists
+- [x] Add Swagger for documentation
 - Implement pagination and sorting
 - Enable filtering animes by genre, rating, and status
 - Build a frontend client (React)
