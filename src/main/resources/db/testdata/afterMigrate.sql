@@ -9,6 +9,7 @@ DELETE FROM user;
 DELETE FROM role;
 DELETE FROM user_role;
 DELETE FROM user_anime;
+DELETE FROM user_manga;
 
 SET foreign_key_checks = 1;
 
@@ -20,6 +21,7 @@ ALTER TABLE manga_genre auto_increment = 1;
 ALTER TABLE user auto_increment = 1;
 ALTER TABLE role auto_increment = 1;
 ALTER TABLE user_anime auto_increment = 1;
+ALTER TABLE user_manga auto_increment = 1;
 
 INSERT INTO `anime` (`aired_from`, `aired_to`, `author`, `description`, `status`, `title`, `total_episodes`) VALUES ('2004','2005','Naoki Urasawa','Monster anime','FINISHED','Monster','74');
 INSERT INTO `genre` (`name`) VALUES ('Fantasy'),('Action'),('Romance');
