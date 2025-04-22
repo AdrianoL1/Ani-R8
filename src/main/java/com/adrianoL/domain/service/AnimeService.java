@@ -3,7 +3,6 @@ package com.adrianoL.domain.service;
 import com.adrianoL.api.dto.AnimeDTO;
 import com.adrianoL.domain.exception.AnimeNotFoundException;
 import com.adrianoL.domain.model.Anime;
-import com.adrianoL.domain.model.Genre;
 import com.adrianoL.domain.repository.AnimeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -12,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.adrianoL.api.dto_mapper.ObjectMapper.*;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,7 +53,6 @@ public class AnimeService {
     @Transactional
     public AnimeDTO update(Long id, AnimeDTO anime){
         Anime currentAnime = getAnimeOrException(id);
-
 
         BeanUtils.copyProperties(anime, currentAnime, "id");
 
