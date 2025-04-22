@@ -1,5 +1,6 @@
 package com.adrianoL.domain.service;
 
+import com.adrianoL.api.dto.GenreDTO;
 import com.adrianoL.domain.exception.GenreNotFoundException;
 import com.adrianoL.domain.model.Genre;
 import com.adrianoL.domain.repository.GenreRepository;
@@ -7,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import static com.adrianoL.api.dto_mapper.ObjectMapper.*;
 
 import java.util.List;
 
@@ -25,25 +27,30 @@ public class GenreService {
         );
     }
 
-    public List<Genre> listAll(){
-        return genreRepository.findAll();
+    public List<GenreDTO> listAll(){
+        return parseListObject(genreRepository.findAll(), GenreDTO.class);
     }
 
-    public Genre findById(Long id){
-        return getGenreOrException(id);
-    }
-
-    @Transactional
-    public Genre create(Genre genre){
-        return genreRepository.save(genre);
+    public GenreDTO findById(Long id){
+        return parseObject(getGenreOrException(id), GenreDTO.class);
     }
 
     @Transactional
-    public Genre update(Long id, Genre genre){
+    public GenreDTO create(GenreDTO genre){
+        Genre genreEntity = parseObject(genre, Genre.class);
+        genreRepository.save(genreEntity);
+
+        return parseObject(genreEntity, GenreDTO.class);
+    }
+
+    @Transactional
+    public GenreDTO update(Long id, GenreDTO genre){
         Genre currentGenre = getGenreOrException(id);
         BeanUtils.copyProperties(genre, currentGenre, "id");
 
-        return genreRepository.save(currentGenre);
+        genreRepository.save(currentGenre);
+
+        return parseObject(currentGenre, GenreDTO.class);
     }
 
     @Transactional
