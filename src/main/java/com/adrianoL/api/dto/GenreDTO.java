@@ -1,6 +1,5 @@
 package com.adrianoL.api.dto;
 
-import com.adrianoL.domain.model.Genre;
 import lombok.Getter;
 import lombok.Setter;
 

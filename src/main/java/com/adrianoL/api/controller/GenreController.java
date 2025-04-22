@@ -1,6 +1,6 @@
 package com.adrianoL.api.controller;
 
-import com.adrianoL.domain.model.Genre;
+import com.adrianoL.api.dto.GenreDTO;
 import com.adrianoL.domain.service.GenreService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,25 +17,25 @@ public class GenreController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Genre> findAll(){
+    public List<GenreDTO> findAll(){
         return genreService.listAll();
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Genre getGenreById(@PathVariable Long id) {
+    public GenreDTO getGenreById(@PathVariable Long id) {
         return genreService.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Genre createGenre(@RequestBody Genre genre){
+    public GenreDTO createGenre(@RequestBody GenreDTO genre){
         return genreService.create(genre);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Genre updateGenre(@PathVariable Long id, @RequestBody Genre genre){
+    public GenreDTO updateGenre(@PathVariable Long id, @RequestBody GenreDTO genre){
         return genreService.update(id, genre);
     }
 
