@@ -21,9 +21,7 @@ public class GenreService {
 
     public Genre getGenreOrException(Long id){
         return genreRepository.findById(id).orElseThrow(
-                () -> new GenreNotFoundException(
-                        String.format("Genre with ID: %s not found", id)
-                )
+                () -> new GenreNotFoundException(id)
         );
     }
 

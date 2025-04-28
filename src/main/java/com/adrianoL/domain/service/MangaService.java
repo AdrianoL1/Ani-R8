@@ -24,9 +24,7 @@ public class MangaService {
 
     public Manga getMangaOrException(Long id){
         return mangaRepository.findById(id).orElseThrow(
-                () -> new MangaNotFoundException(
-                        String.format("Manga with ID: %s not found", id)
-                )
+                () -> new MangaNotFoundException(id)
         );
     }
 

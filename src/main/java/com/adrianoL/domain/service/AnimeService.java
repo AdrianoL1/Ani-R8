@@ -23,7 +23,7 @@ public class AnimeService {
 
     public Anime getAnimeOrException(Long id){
         return animeRepository.findById(id).orElseThrow(
-                () -> new AnimeNotFoundException(String.format("Anime with ID: %s not found", id))
+                () -> new AnimeNotFoundException(id)
         );
     }
 
