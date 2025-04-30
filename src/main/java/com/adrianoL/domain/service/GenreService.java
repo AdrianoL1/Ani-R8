@@ -53,6 +53,7 @@ public class GenreService {
 
     @Transactional
     public void delete(Long id){
-        genreRepository.deleteById(id);
+        Genre genreEntity = getGenreOrException(id);
+        genreRepository.deleteById(genreEntity.getId());
     }
 }
