@@ -1,6 +1,7 @@
 package com.adrianoL.api.controller;
 
 import com.adrianoL.api.dto.AnimeDTO;
+import com.adrianoL.api.dto.input.AnimeInput;
 import com.adrianoL.domain.service.AnimeService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,13 +30,13 @@ public class AnimeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AnimeDTO createAnime(@RequestBody AnimeDTO anime){
+    public AnimeDTO createAnime(@RequestBody AnimeInput anime){
         return animeService.create(anime);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public AnimeDTO updateAnime(@PathVariable Long id, @RequestBody AnimeDTO anime){
+    public AnimeDTO updateAnime(@PathVariable Long id, @RequestBody AnimeInput anime){
         return animeService.update(id, anime);
     }
 

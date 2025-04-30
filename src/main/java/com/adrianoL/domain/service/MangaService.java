@@ -1,6 +1,7 @@
 package com.adrianoL.domain.service;
 
 import com.adrianoL.api.dto.MangaDTO;
+import com.adrianoL.api.dto.input.MangaInput;
 import com.adrianoL.domain.exception.MangaNotFoundException;
 import com.adrianoL.domain.model.Manga;
 import com.adrianoL.domain.repository.MangaRepository;
@@ -37,7 +38,7 @@ public class MangaService {
     }
 
     @Transactional
-    public MangaDTO create(MangaDTO manga){
+    public MangaDTO create(MangaInput manga){
 
         Manga mangaEntity = parseObject(manga, Manga.class);
 
@@ -52,13 +53,18 @@ public class MangaService {
     }
 
     @Transactional
-    public MangaDTO update(Long id, MangaDTO manga){
+    public MangaDTO update(Long id, MangaInput manga){
 
         Manga currentManga = getMangaOrException(id);
         BeanUtils.copyProperties(manga, currentManga, "id");
 
-        mangaRepository.save(currentManga);
+        var genres = manga.getGenres().stream().map(
+                genre -> genreService.getGenreOrException(genre.getId())
+        ).collect(Collectors.toSet());
 
+        currentManga.setGenres(genres);
+
+        mangaRepository.save(currentManga);
         return parseObject(currentManga, MangaDTO.class);
     }
 
