@@ -1,6 +1,7 @@
 package com.adrianoL.domain.service;
 
 import com.adrianoL.api.dto.AnimeDTO;
+import com.adrianoL.api.dto.input.AnimeInput;
 import com.adrianoL.domain.exception.AnimeNotFoundException;
 import com.adrianoL.domain.model.Anime;
 import com.adrianoL.domain.repository.AnimeRepository;
@@ -23,7 +24,7 @@ public class AnimeService {
 
     public Anime getAnimeOrException(Long id){
         return animeRepository.findById(id).orElseThrow(
-                () -> new AnimeNotFoundException(String.format("Anime with ID: %s not found", id))
+                () -> new AnimeNotFoundException(id)
         );
     }
 
@@ -36,7 +37,7 @@ public class AnimeService {
     }
 
     @Transactional
-    public AnimeDTO create(AnimeDTO anime) {
+    public AnimeDTO create(AnimeInput anime) {
 
         Anime animeEntity = parseObject(anime, Anime.class);
 
@@ -51,18 +52,24 @@ public class AnimeService {
     }
 
     @Transactional
-    public AnimeDTO update(Long id, AnimeDTO anime){
+    public AnimeDTO update(Long id, AnimeInput anime){
         Anime currentAnime = getAnimeOrException(id);
 
         BeanUtils.copyProperties(anime, currentAnime, "id");
 
-        Anime animeEntity = animeRepository.save(parseObject(currentAnime, Anime.class));
+        var genres = anime.getGenres().stream().map(
+                genre -> genreService.getGenreOrException(genre.getId())
+        ).collect(Collectors.toSet());
 
-        return parseObject(animeEntity, AnimeDTO.class);
+        currentAnime.setGenres(genres);
+
+        animeRepository.save(currentAnime);
+        return parseObject(currentAnime, AnimeDTO.class);
     }
 
     @Transactional
     public void delete(Long id){
-        animeRepository.deleteById(id);
+        Anime animeEntity = getAnimeOrException(id);
+        animeRepository.deleteById(animeEntity.getId());
     }
 }

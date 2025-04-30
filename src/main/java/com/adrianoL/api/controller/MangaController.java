@@ -1,6 +1,7 @@
 package com.adrianoL.api.controller;
 
 import com.adrianoL.api.dto.MangaDTO;
+import com.adrianoL.api.dto.input.MangaInput;
 import com.adrianoL.domain.service.MangaService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,13 +30,13 @@ public class MangaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public MangaDTO createManga(@RequestBody MangaDTO manga){
+    public MangaDTO createManga(@RequestBody MangaInput manga){
         return mangaService.create(manga);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public MangaDTO updateManga(@PathVariable Long id, @RequestBody MangaDTO manga){
+    public MangaDTO updateManga(@PathVariable Long id, @RequestBody MangaInput manga){
         return mangaService.update(id, manga);
     }
 
