@@ -7,6 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,12 +20,15 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@EnableMethodSecurity
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtDecoder jwtDecoder;
     private final JwtAuthenticationConverter jwtAuthenticationConverter;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
@@ -39,16 +43,31 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        .accessDeniedHandler(customAccessDeniedHandler)
+                )
                 .oauth2ResourceServer(
                         resourceServer -> {
                             resourceServer.jwt(jwt -> {
                                 jwt.decoder(jwtDecoder);
                                 jwt.jwtAuthenticationConverter(jwtAuthenticationConverter);
                             });
+                            resourceServer.authenticationEntryPoint(customAuthenticationEntryPoint);
+                            resourceServer.accessDeniedHandler(customAccessDeniedHandler);
                         }
                 )
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/api/v1/auth/**").permitAll();
+                    auth.requestMatchers(HttpMethod.POST,"/api/v1/anime").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.DELETE,"/api/v1/anime/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.PUT,"/api/v1/anime/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.POST,"/api/v1/manga").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.DELETE,"/api/v1/manga/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.PUT,"/api/v1/manga/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.POST,"/api/v1/genre").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.DELETE,"/api/v1/genre/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.PUT,"/api/v1/genre/**").hasRole("ADMIN");
                     auth.requestMatchers(HttpMethod.GET, "/**").permitAll();
                     auth.anyRequest().authenticated();
                 })
