@@ -1,6 +1,7 @@
 package com.adrianoL.domain.service;
 
 import com.adrianoL.api.dto.UserDTO;
+import com.adrianoL.config.properties_metadata.TokenPropertiesConfig;
 import com.adrianoL.domain.model.auth.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,13 +12,13 @@ import org.springframework.stereotype.Service;
 import static com.adrianoL.api.dto_mapper.ObjectMapper.*;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 @Service
 @RequiredArgsConstructor
 public class TokenService {
 
     private final JwtEncoder jwtEncoder;
+    private final TokenPropertiesConfig tokenPropertiesConfig;
 
     public Jwt generateToken(User user){
 
@@ -27,7 +28,7 @@ public class TokenService {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("AniR8")
                 .issuedAt(createdAt)
-                .expiresAt(createdAt.plus(1, ChronoUnit.WEEKS))
+                .expiresAt(createdAt.plusSeconds(tokenPropertiesConfig.accessToken().expirationTime()))
                 .subject(user.getUsername())
                 .claim("user", parsedUser)
                 .claim("scope", scopes)
