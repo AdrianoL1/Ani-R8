@@ -1,9 +1,6 @@
 package com.adrianoL.domain.exception.handler;
 
-import com.adrianoL.domain.exception.AnimeNotFoundException;
-import com.adrianoL.domain.exception.GenreNotFoundException;
-import com.adrianoL.domain.exception.MangaNotFoundException;
-import com.adrianoL.domain.exception.ResourceNotFoundException;
+import com.adrianoL.domain.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -34,5 +31,15 @@ public class CustomEntityResponseHandler extends ResponseEntityExceptionHandler 
         );
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public final ResponseEntity<ExceptionResponse> userAlreadyExistsException(Exception ex, WebRequest request){
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
     }
 }

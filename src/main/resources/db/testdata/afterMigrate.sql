@@ -5,6 +5,9 @@ DELETE FROM manga;
 DELETE FROM genre;
 DELETE FROM anime_genre;
 DELETE FROM manga_genre;
+DELETE FROM user;
+DELETE FROM role;
+DELETE FROM user_role;
 
 SET foreign_key_checks = 1;
 
@@ -19,3 +22,4 @@ INSERT INTO `genre` (`name`) VALUES ('Fantasy'),('Action'),('Romance');
 INSERT INTO `manga` (`author`, `chapters`, `description`, `published_from`, `published_to`, `status`, `title`, `volumes`) VALUES ('Tsugumi Ohba','108','manga death note','2003','2006','FINISHED','Death Note','12');
 INSERT INTO `anime_genre` (`anime_id`, `genre_id`) VALUES (1,1),(1,2);
 INSERT INTO `manga_genre` (`manga_id`, `genre_id`) VALUES (1,1),(1,2);
+INSERT INTO `role` (`name`) VALUES ('ADMIN'), ('USER');
