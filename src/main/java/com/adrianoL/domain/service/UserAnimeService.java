@@ -43,4 +43,10 @@ public class UserAnimeService {
         userAnimeRepository.save(userList);
         return parseObject(userList, UserAnimeDTO.class);
     }
+
+    @Transactional
+    public void delete(UserDTO user, Long id){
+        var animeEntity = animeService.findById(id);
+        userAnimeRepository.deleteAnimeFromUserList(animeEntity.getId(), user.getId());
+    }
 }

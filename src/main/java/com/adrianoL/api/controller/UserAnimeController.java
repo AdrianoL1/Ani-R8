@@ -33,4 +33,10 @@ public class UserAnimeController {
         return userAnimeService.create(parseObject(user, UserDTO.class), userAnimeInput);
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteFromUserList(@PathVariable Long id, JwtAuthenticationToken authToken){
+        var user = userService.getUserByUsernameOrException(authToken.getName());
+        userAnimeService.delete(parseObject(user, UserDTO.class), id);
+    }
 }
