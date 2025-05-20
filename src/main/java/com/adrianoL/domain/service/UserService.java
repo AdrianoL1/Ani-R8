@@ -1,5 +1,6 @@
 package com.adrianoL.domain.service;
 
+import com.adrianoL.api.dto.UserDTO;
 import com.adrianoL.domain.exception.UserAlreadyExistsException;
 import com.adrianoL.domain.model.auth.User;
 import com.adrianoL.domain.repository.UserRepository;
@@ -8,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import static com.adrianoL.api.dto_mapper.ObjectMapper.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +29,17 @@ public class UserService {
         return userRepository.findUserByEmail(email).orElseThrow(
                 () -> new UsernameNotFoundException("User not found!")
         );
+    }
+
+    public User getUserByUsernameOrException(String username){
+        return userRepository.findUserByUsername(username).orElseThrow(
+                () -> new UsernameNotFoundException("User not found!")
+        );
+    }
+
+    public UserDTO findByUsername(String username){
+        var user = getUserByUsernameOrException(username);
+        return parseObject(user, UserDTO.class);
     }
 
     @Transactional
