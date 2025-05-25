@@ -2,6 +2,7 @@ package com.adrianoL.api.controller;
 
 import com.adrianoL.api.dto.UserAnimeDTO;
 import com.adrianoL.api.dto.UserDTO;
+import com.adrianoL.api.dto.input.UpdateUsersAnimeInput;
 import com.adrianoL.api.dto.input.UserAnimeInput;
 import com.adrianoL.domain.service.UserAnimeService;
 import com.adrianoL.domain.service.UserService;
@@ -38,5 +39,12 @@ public class UserAnimeController {
     public void deleteFromUserList(@PathVariable Long id, JwtAuthenticationToken authToken){
         var user = userService.getUserByUsernameOrException(authToken.getName());
         userAnimeService.delete(parseObject(user, UserDTO.class), id);
+    }
+
+    @PutMapping({"/{id}"})
+    @ResponseStatus(HttpStatus.OK)
+    public UserAnimeDTO updateEntryInUserList(@PathVariable Long id, @RequestBody UpdateUsersAnimeInput updateUsersAnimeInput, JwtAuthenticationToken authToken){
+        var user = userService.getUserByUsernameOrException(authToken.getName());
+        return userAnimeService.update(parseObject(user, UserDTO.class), id, updateUsersAnimeInput);
     }
 }
