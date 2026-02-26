@@ -1,12 +1,17 @@
 package com.adrianoL.domain.service;
 
 import com.adrianoL.api.dto.AnimeDTO;
+import com.adrianoL.api.dto.PageDTO;
+import com.adrianoL.api.dto.filter.AnimeFilter;
 import com.adrianoL.api.dto.input.AnimeInput;
 import com.adrianoL.domain.exception.AnimeNotFoundException;
 import com.adrianoL.domain.model.Anime;
 import com.adrianoL.domain.repository.AnimeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import static com.adrianoL.api.dto_mapper.ObjectMapper.*;
@@ -32,8 +37,12 @@ public class AnimeService {
         return parseObject(getAnimeOrException(id), AnimeDTO.class);
     }
 
-    public List<AnimeDTO> listAll(){
-        return parseListObject(animeRepository.findAll(), AnimeDTO.class);
+    public PageDTO<AnimeDTO> findAll(Pageable pageable, AnimeFilter filter){
+        Page<Anime> animePage = animeRepository.findAll(filter.toSpecification(), pageable);
+        List<AnimeDTO> animeDTOS = parseListObject(animePage.getContent(), AnimeDTO.class);
+        var pageImpl = new PageImpl<>(animeDTOS, pageable, animePage.getTotalElements());
+
+        return new PageDTO<>(pageImpl);
     }
 
     @Transactional

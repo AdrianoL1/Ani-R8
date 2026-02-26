@@ -18,6 +18,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
@@ -41,6 +45,17 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> {
+                    CorsConfigurationSource source = request -> {
+                        CorsConfiguration config = new CorsConfiguration();
+                        config.setAllowedOrigins(List.of("localhost:8080"));
+                        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                        config.setAllowedHeaders(List.of("*"));
+
+                        return config;
+                    };
+                    cors.configurationSource(source);
+                })
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(ex -> ex
