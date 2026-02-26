@@ -2,14 +2,17 @@ package com.adrianoL.api.controller;
 
 import com.adrianoL.api.docs.AnimeControllerDocs;
 import com.adrianoL.api.dto.AnimeDTO;
+import com.adrianoL.api.dto.PageDTO;
+import com.adrianoL.api.dto.filter.AnimeFilter;
 import com.adrianoL.api.dto.input.AnimeInput;
 import com.adrianoL.domain.service.AnimeService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -21,8 +24,12 @@ public class AnimeController implements AnimeControllerDocs {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @Override
-    public List<AnimeDTO> getAllAnimes(){
-        return animeService.listAll();
+    public PageDTO<AnimeDTO> getAllAnimes(
+            @PageableDefault(size = 10, sort = {"title"}, direction = Sort.Direction.ASC) Pageable pageable,
+            AnimeFilter animeFilter
+    )
+    {
+        return animeService.findAll(pageable, animeFilter);
     }
 
     @GetMapping("/{id}")
