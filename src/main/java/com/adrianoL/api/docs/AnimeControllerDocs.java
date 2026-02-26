@@ -1,6 +1,8 @@
 package com.adrianoL.api.docs;
 
 import com.adrianoL.api.dto.AnimeDTO;
+import com.adrianoL.api.dto.PageDTO;
+import com.adrianoL.api.dto.filter.AnimeFilter;
 import com.adrianoL.api.dto.input.AnimeInput;
 import com.adrianoL.domain.exception.AnimeNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,9 +12,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 
@@ -27,7 +35,10 @@ public interface AnimeControllerDocs {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = ProblemDetail.class)))
 
     })
-    List<AnimeDTO> getAllAnimes();
+    PageDTO<AnimeDTO> getAllAnimes(
+            @PageableDefault(size = 10, sort = {"title"}, direction = Sort.Direction.ASC) Pageable pageable,
+            AnimeFilter animeFilter
+    );
 
     @Operation(summary = "Get an anime by ID")
     @ApiResponses(value = {
