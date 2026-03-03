@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.data.jpa.domain.Specification;
 
 import static com.adrianoL.infrastructure.repository.AnimeSpec.*;
+import static com.adrianoL.infrastructure.repository.MediaSpec.*;
 
 import java.util.List;
 
@@ -15,17 +16,18 @@ public class AnimeFilter {
 
     private String q;
     private String status;
-    private List<String> genre;
+    private List<String> genres;
     private String author;
     private String airedFrom;
     private String airedTo;
 
     public Specification<Anime> toSpecification(){
-        return titleContains(q)
+        return airedFrom(airedFrom)
+                .and(titleContains(q))
                 .and(statusEquals(status))
                 .and(authorLike(author))
-                .and(airedFrom(airedFrom))
-                .and(airedTo(airedTo));
+                .and(airedTo(airedTo))
+                .and(hasGenre(genres));
     }
 }
 
