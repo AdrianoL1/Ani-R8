@@ -1,12 +1,21 @@
 package com.adrianoL.api.controller;
 
+import com.adrianoL.api.dto.PageDTO;
 import com.adrianoL.api.dto.UserAnimeDTO;
 import com.adrianoL.api.dto.UserDTO;
+import com.adrianoL.api.dto.filter.UserAnimeFilter;
 import com.adrianoL.api.dto.input.UpdateUsersAnimeInput;
 import com.adrianoL.api.dto.input.UserAnimeInput;
+import com.adrianoL.domain.model.Anime;
+import com.adrianoL.domain.model.UserAnime;
 import com.adrianoL.domain.service.UserAnimeService;
+import com.adrianoL.domain.service.UserMangaService;
 import com.adrianoL.domain.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +32,12 @@ public class UserAnimeController {
 
     @GetMapping("/{username}")
     @ResponseStatus(HttpStatus.OK)
-    public List<UserAnimeDTO> getUserAllEntries(@PathVariable String username){
-        return userAnimeService.getAllUserEntries(username);
+    public PageDTO<UserAnimeDTO> getUserAllEntries(
+            @PathVariable String username,
+            @PageableDefault(size = 10, direction = Sort.Direction.ASC) Pageable pageable,
+            UserAnimeFilter filter
+    ) {
+        return userAnimeService.getAllUserEntries(username, pageable, filter);
     }
 
     @PostMapping

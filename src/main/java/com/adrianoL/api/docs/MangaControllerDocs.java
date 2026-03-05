@@ -1,9 +1,9 @@
 package com.adrianoL.api.docs;
 
-import com.adrianoL.api.dto.AnimeDTO;
 import com.adrianoL.api.dto.MangaDTO;
+import com.adrianoL.api.dto.PageDTO;
+import com.adrianoL.api.dto.filter.MangaFilter;
 import com.adrianoL.api.dto.input.MangaInput;
-import com.adrianoL.domain.exception.AnimeNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,6 +11,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +30,10 @@ public interface MangaControllerDocs {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = ProblemDetail.class)))
 
     })
-    List<MangaDTO> findAll();
+    PageDTO<MangaDTO> findAll(
+            @PageableDefault(size = 10, sort = {"title"}, direction = Sort.Direction.ASC) Pageable pageable,
+            MangaFilter mangaFilter
+    );
 
     @Operation(summary = "Get a manga by ID")
     @ApiResponses(value = {

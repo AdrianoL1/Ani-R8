@@ -1,7 +1,9 @@
 package com.adrianoL.domain.service;
 
+import com.adrianoL.api.dto.PageDTO;
 import com.adrianoL.api.dto.UserDTO;
 import com.adrianoL.api.dto.UserMangaDTO;
+import com.adrianoL.api.dto.filter.UserMangaFilter;
 import com.adrianoL.api.dto.input.UpdateUsersMangaInput;
 import com.adrianoL.api.dto.input.UserMangaInput;
 import com.adrianoL.domain.exception.ResourceNotFoundException;
@@ -9,8 +11,12 @@ import com.adrianoL.domain.model.Manga;
 import com.adrianoL.domain.model.UserManga;
 import com.adrianoL.domain.model.auth.User;
 import com.adrianoL.domain.repository.UserMangaRepository;
+import com.adrianoL.infrastructure.repository.UserListSpec;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import static com.adrianoL.api.dto_mapper.ObjectMapper.*;
@@ -31,9 +37,16 @@ public class UserMangaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Manga not found in your list!"));
     }
 
-    public List<UserMangaDTO> getAllMangaFromUsersList(String username){
+    public PageDTO<UserMangaDTO> getUsersMangaList(String username, Pageable pageable, UserMangaFilter filter){
         var user = userService.findByUsername(username);
-        return parseListObject(userMangaRepository.findAllUserEntriesByUsername(user.getUsername()), UserMangaDTO.class);
+        Page<UserManga> userMangaPage = userMangaRepository.findAll(
+                UserListSpec.<UserManga>belongsToUsername(user.getUsername())
+                        .and(filter.toSpecification()), pageable
+        );
+        List<UserMangaDTO> userMangaDTOS = parseListObject(userMangaPage.getContent(), UserMangaDTO.class);
+        var pageImpl = new PageImpl<>(userMangaDTOS, pageable, userMangaPage.getTotalElements());
+
+        return new PageDTO<>(pageImpl);
     }
 
     @Transactional

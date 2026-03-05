@@ -1,34 +1,31 @@
 package com.adrianoL.api.dto.filter;
 
-import com.adrianoL.domain.model.Anime;
+import com.adrianoL.domain.model.Manga;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.jpa.domain.Specification;
-
-import static com.adrianoL.infrastructure.repository.AnimeSpec.*;
+import static com.adrianoL.infrastructure.repository.MangaSpec.*;
 import static com.adrianoL.infrastructure.repository.MediaSpec.*;
 
 import java.util.List;
 
 @Getter
 @Setter
-public class AnimeFilter {
+public class MangaFilter {
 
     private String q;
     private String status;
     private List<String> genres;
     private String author;
-    private String airedFrom;
-    private String airedTo;
+    private String publishedFrom;
+    private String publishedTo;
 
-    public Specification<Anime> toSpecification(){
-        return airedFrom(airedFrom)
+    public Specification<Manga> toSpecification(){
+        return publishedFrom(publishedFrom)
                 .and(titleContains(q))
                 .and(statusEquals(status))
+                .and(hasGenre(genres))
                 .and(authorLike(author))
-                .and(airedTo(airedTo))
-                .and(hasGenre(genres));
+                .and(publishedTo(publishedTo));
     }
 }
-
-

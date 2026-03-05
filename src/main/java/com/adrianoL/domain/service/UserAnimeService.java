@@ -1,7 +1,9 @@
 package com.adrianoL.domain.service;
 
+import com.adrianoL.api.dto.PageDTO;
 import com.adrianoL.api.dto.UserAnimeDTO;
 import com.adrianoL.api.dto.UserDTO;
+import com.adrianoL.api.dto.filter.UserAnimeFilter;
 import com.adrianoL.api.dto.input.UpdateUsersAnimeInput;
 import com.adrianoL.api.dto.input.UserAnimeInput;
 import com.adrianoL.domain.exception.ResourceNotFoundException;
@@ -9,11 +11,16 @@ import com.adrianoL.domain.model.Anime;
 import com.adrianoL.domain.model.UserAnime;
 import com.adrianoL.domain.model.auth.User;
 import com.adrianoL.domain.repository.UserAnimeRepository;
+import com.adrianoL.infrastructure.repository.UserListSpec;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import static com.adrianoL.api.dto_mapper.ObjectMapper.*;
+import static com.adrianoL.infrastructure.repository.UserListSpec.belongsToUsername;
 
 import java.util.List;
 
@@ -31,13 +38,21 @@ public class UserAnimeService {
                 .orElseThrow(() -> new ResourceNotFoundException("Anime not found in your list."));
     }
 
-    public List<UserAnimeDTO> getAllUserEntries(String username){
+    public PageDTO<UserAnimeDTO> getAllUserEntries(String username, Pageable pageable, UserAnimeFilter filter){
         var user = userService.findByUsername(username);
-        return parseListObject(userAnimeRepository.findAllUserEntriesByUsername(user.getUsername()), UserAnimeDTO.class);
+        Page<UserAnime> userAnimePage = userAnimeRepository.findAll(
+                UserListSpec.<UserAnime>belongsToUsername(user.getUsername())
+                .and(filter.toSpecification()), pageable
+        );
+        List<UserAnimeDTO> userAnimeDTOS = parseListObject(userAnimePage.getContent(), UserAnimeDTO.class);
+        var pageImpl = new PageImpl<>(userAnimeDTOS, pageable, userAnimePage.getTotalElements());
+
+        return new PageDTO<>(pageImpl);
+
     }
 
     @Transactional
-    public UserAnimeDTO create (UserDTO user, UserAnimeInput userAnimeInput){
+    public UserAnimeDTO create(UserDTO user, UserAnimeInput userAnimeInput){
         var anime = animeService.findById(userAnimeInput.getAnimeId());
 
         UserAnime userList = UserAnime.builder()
