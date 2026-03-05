@@ -1,7 +1,6 @@
 package com.adrianoL.infrastructure.repository;
 
-import com.adrianoL.domain.model.Anime;
-import org.apache.commons.lang3.ObjectUtils;
+import com.adrianoL.domain.model.UserAnime;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Objects;
@@ -10,15 +9,15 @@ public class UserListSpec {
 
     public static <T> Specification<T> titleLike(String q){
         return (root, query, builder) -> {
-              var mediaType = Objects.nonNull(root.get("anime")) ? root.get("anime") : root.get("manga");
-              return q == null ? null : builder.like(mediaType.get("title"), '%' + q.toLowerCase() + '%');
+            var mediaType = root.getJavaType().equals(UserAnime.class) ? "anime" : "manga";
+            return q == null ? null : builder.like(root.get(mediaType).get("title"), '%' + q.toLowerCase() + '%');
         };
     }
 
     public static <T> Specification<T> authorLike(String author){
         return (root, query, builder) -> {
-            var mediaType = Objects.nonNull(root.get("anime")) ? root.get("anime") : root.get("manga");
-            return author == null ? null : builder.like(mediaType.get("author"), '%' + author.toLowerCase() + '%');
+            var mediaType = root.getJavaType().equals(UserAnime.class) ? "anime" : "manga";
+            return author == null ? null : builder.like(root.get(mediaType).get("author"), '%' + author.toLowerCase() + '%');
         };
     }
 

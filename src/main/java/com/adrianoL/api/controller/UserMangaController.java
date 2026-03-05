@@ -1,12 +1,17 @@
 package com.adrianoL.api.controller;
 
+import com.adrianoL.api.dto.PageDTO;
 import com.adrianoL.api.dto.UserDTO;
 import com.adrianoL.api.dto.UserMangaDTO;
+import com.adrianoL.api.dto.filter.UserMangaFilter;
 import com.adrianoL.api.dto.input.UpdateUsersMangaInput;
 import com.adrianoL.api.dto.input.UserMangaInput;
 import com.adrianoL.domain.service.UserMangaService;
 import com.adrianoL.domain.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +30,12 @@ public class UserMangaController {
 
     @GetMapping("/{username}")
     @ResponseStatus(HttpStatus.OK)
-    public List<UserMangaDTO> getUserAllEntries(@PathVariable String username){
-        return userMangaService.getAllMangaFromUsersList(username);
+    public PageDTO<UserMangaDTO> getUsersList(
+            @PathVariable String username,
+            @PageableDefault(size = 10, direction = Sort.Direction.ASC) Pageable pageable,
+            UserMangaFilter filter
+    ) {
+        return userMangaService.getUsersMangaList(username, pageable, filter);
     }
 
     @PostMapping
