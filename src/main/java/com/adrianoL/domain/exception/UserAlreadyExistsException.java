@@ -9,7 +9,7 @@ public class UserAlreadyExistsException extends RuntimeException {
 
   private Map<String, String> errors;
 
-    public UserAlreadyExistsException(String message) {
+  public UserAlreadyExistsException(String message) {
         super(message);
     }
 

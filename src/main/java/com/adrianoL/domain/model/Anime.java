@@ -50,6 +50,9 @@ public class Anime {
     )
     private Set<Genre> genres = new HashSet<>();
 
+    @OneToOne
+    private Image image;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
