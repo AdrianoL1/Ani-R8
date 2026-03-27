@@ -1,5 +1,6 @@
 package com.adrianoL.api.dto;
 
+import com.adrianoL.domain.model.Image;
 import com.adrianoL.domain.model.enums.Status;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +22,7 @@ public class AnimeDTO implements Serializable {
     private String airedTo;
     private String author;
     private Set<GenreDTO> genres;
+    private Image image;
 
     public AnimeDTO(){}
 
