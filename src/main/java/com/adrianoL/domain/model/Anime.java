@@ -53,15 +53,18 @@ public class Anime {
     @OneToOne
     private Image image;
 
+    public boolean hasImage(){
+        return this.image != null;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (!(o instanceof Anime anime)) return false;
-        return Objects.equals(getId(), anime.getId()) && Objects.equals(getTitle(), anime.getTitle()) && getStatus() == anime.getStatus() && Objects.equals(getDescription(), anime.getDescription()) && Objects.equals(getTotalEpisodes(), anime.getTotalEpisodes()) && Objects.equals(getAiredFrom(), anime.getAiredFrom()) && Objects.equals(getAiredTo(), anime.getAiredTo()) && Objects.equals(getAuthor(), anime.getAuthor()) && Objects.equals(getGenres(), anime.getGenres());
+        return Objects.equals(getId(), anime.getId()) && Objects.equals(getTitle(), anime.getTitle()) && getStatus() == anime.getStatus() && Objects.equals(getDescription(), anime.getDescription()) && Objects.equals(getTotalEpisodes(), anime.getTotalEpisodes()) && Objects.equals(getAiredFrom(), anime.getAiredFrom()) && Objects.equals(getAiredTo(), anime.getAiredTo()) && Objects.equals(getAuthor(), anime.getAuthor()) && Objects.equals(getGenres(), anime.getGenres()) && Objects.equals(getImage(), anime.getImage());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getTitle(), getStatus(), getDescription(), getTotalEpisodes(), getAiredFrom(), getAiredTo(), getAuthor(), getGenres());
+        return Objects.hash(getId(), getTitle(), getStatus(), getDescription(), getTotalEpisodes(), getAiredFrom(), getAiredTo(), getAuthor(), getGenres(), getImage());
     }
 }

@@ -42,4 +42,14 @@ public class CustomEntityResponseHandler extends ResponseEntityExceptionHandler 
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(StorageException.class)
+    public final ResponseEntity<ExceptionResponse> storageException(Exception ex, WebRequest request){
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+    }
 }

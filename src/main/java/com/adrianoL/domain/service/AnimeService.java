@@ -6,6 +6,7 @@ import com.adrianoL.api.dto.filter.AnimeFilter;
 import com.adrianoL.api.dto.input.AnimeInput;
 import com.adrianoL.domain.exception.AnimeNotFoundException;
 import com.adrianoL.domain.model.Anime;
+import com.adrianoL.domain.model.Image;
 import com.adrianoL.domain.repository.AnimeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -14,6 +15,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import static com.adrianoL.api.dto_mapper.ObjectMapper.*;
 
 import java.util.List;
@@ -26,6 +29,7 @@ public class AnimeService {
 
     private final AnimeRepository animeRepository;
     private final GenreService genreService;
+    private final ImageService imageService;
 
     public Anime getAnimeOrException(Long id){
         return animeRepository.findById(id).orElseThrow(
@@ -81,4 +85,30 @@ public class AnimeService {
         Anime animeEntity = getAnimeOrException(id);
         animeRepository.deleteById(animeEntity.getId());
     }
+
+    @Transactional
+    public Image saveImage(AnimeDTO anime, Image image, MultipartFile multipartFile) {
+        var animeEntity = parseObject(anime, Anime.class);
+
+        if(animeEntity.hasImage()){
+            deleteImage(anime);
+        }
+
+        image = imageService.save(image, multipartFile);
+
+        animeEntity.setImage(image);
+        animeRepository.save(animeEntity);
+
+        return imageService.getImageDataOrException(image.getId());
+    }
+
+    @Transactional
+    public void deleteImage(AnimeDTO anime){
+        var animeEntity = parseObject(anime, Anime.class);
+
+        imageService.delete(animeEntity.getImage());
+        animeEntity.setImage(null);
+        animeRepository.save(animeEntity);
+    }
+
 }

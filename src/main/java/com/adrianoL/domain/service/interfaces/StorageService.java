@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface StorageService {
 
-    void save(MultipartFile multipartFile);
+    void save(MultipartFile multipartFile, String filename);
 
     Resource retrieve(String filename);
 

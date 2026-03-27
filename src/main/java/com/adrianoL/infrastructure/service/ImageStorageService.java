@@ -29,13 +29,15 @@ public class ImageStorageService implements StorageService {
     private final List<String> allowedTypes = List.of("image/jpeg", "image/png", "image/webp");
 
     @Override
-    public void save(MultipartFile multipartFile) {
+    public void save(MultipartFile multipartFile, String filename) {
         try{
-            Files.createDirectories(storagePath.normalize().toAbsolutePath());
-
+            try {
+                Files.createDirectories(storagePath.normalize().toAbsolutePath());
+            }catch (IOException e){
+                throw new StorageException("Couldn't create directory.");
+            }
 
             String contentType = multipartFile.getContentType();
-            String filename = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
 
             if(!allowedTypes.contains(contentType) || filename.contains("..")){
                 throw new StorageException("Invalid file type!");
