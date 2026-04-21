@@ -7,6 +7,7 @@ import com.adrianoL.api.dto.filter.MangaFilter;
 import com.adrianoL.api.dto.input.MangaInput;
 import com.adrianoL.domain.service.MangaService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -43,7 +44,7 @@ public class MangaController implements MangaControllerDocs {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Override
-    public MangaDTO createManga(@RequestBody MangaInput manga){
+    public MangaDTO createManga(@RequestBody @Valid MangaInput manga){
         return mangaService.create(manga);
     }
 
@@ -51,7 +52,7 @@ public class MangaController implements MangaControllerDocs {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Override
-    public MangaDTO updateManga(@PathVariable Long id, @RequestBody MangaInput manga){
+    public MangaDTO updateManga(@PathVariable Long id, @RequestBody @Valid MangaInput manga){
         return mangaService.update(id, manga);
     }
 

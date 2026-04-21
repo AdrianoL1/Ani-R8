@@ -8,6 +8,7 @@ import com.adrianoL.api.dto.input.UpdateUsersMangaInput;
 import com.adrianoL.api.dto.input.UserMangaInput;
 import com.adrianoL.domain.service.UserMangaService;
 import com.adrianoL.domain.service.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -40,14 +41,14 @@ public class UserMangaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserMangaDTO createEntryInUserList(@RequestBody UserMangaInput userMangaInput, JwtAuthenticationToken authToken){
+    public UserMangaDTO createEntryInUserList(@RequestBody @Valid UserMangaInput userMangaInput, JwtAuthenticationToken authToken){
         var user = userService.getUserByUsernameOrException(authToken.getName());
         return userMangaService.create(parseObject(user, UserDTO.class), userMangaInput);
     }
 
     @PutMapping({"/{id}"})
     @ResponseStatus(HttpStatus.OK)
-    public UserMangaDTO updateEntryInUserList(@PathVariable Long id, @RequestBody UpdateUsersMangaInput updateUsersMangaInput, JwtAuthenticationToken authToken){
+    public UserMangaDTO updateEntryInUserList(@PathVariable @Valid Long id, @RequestBody UpdateUsersMangaInput updateUsersMangaInput, JwtAuthenticationToken authToken){
         var user = userService.getUserByUsernameOrException(authToken.getName());
         return userMangaService.update(parseObject(user, UserDTO.class), id, updateUsersMangaInput);
     }

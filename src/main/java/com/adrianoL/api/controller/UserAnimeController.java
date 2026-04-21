@@ -11,6 +11,7 @@ import com.adrianoL.domain.model.UserAnime;
 import com.adrianoL.domain.service.UserAnimeService;
 import com.adrianoL.domain.service.UserMangaService;
 import com.adrianoL.domain.service.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,7 +43,7 @@ public class UserAnimeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserAnimeDTO createEntryInUserList(@RequestBody UserAnimeInput userAnimeInput, JwtAuthenticationToken authToken){
+    public UserAnimeDTO createEntryInUserList(@RequestBody @Valid UserAnimeInput userAnimeInput, JwtAuthenticationToken authToken){
         var user = userService.getUserByUsernameOrException(authToken.getName());
         return userAnimeService.create(parseObject(user, UserDTO.class), userAnimeInput);
     }
@@ -56,7 +57,7 @@ public class UserAnimeController {
 
     @PutMapping({"/{id}"})
     @ResponseStatus(HttpStatus.OK)
-    public UserAnimeDTO updateEntryInUserList(@PathVariable Long id, @RequestBody UpdateUsersAnimeInput updateUsersAnimeInput, JwtAuthenticationToken authToken){
+    public UserAnimeDTO updateEntryInUserList(@PathVariable Long id, @RequestBody @Valid UpdateUsersAnimeInput updateUsersAnimeInput, JwtAuthenticationToken authToken){
         var user = userService.getUserByUsernameOrException(authToken.getName());
         return userAnimeService.update(parseObject(user, UserDTO.class), id, updateUsersAnimeInput);
     }
