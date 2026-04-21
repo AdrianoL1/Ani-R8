@@ -1,6 +1,8 @@
 package com.adrianoL.api.dto.input;
 
+import com.adrianoL.config.validation.EnumPattern;
 import com.adrianoL.domain.model.enums.UserAnimeStatus;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,8 +12,16 @@ import java.util.Objects;
 @Setter
 public class UpdateUsersAnimeInput {
 
-    private UserAnimeStatus status;
+    @EnumPattern(enumClass = UserAnimeStatus.class)
+    private String status;
+
+    @NotNull
+    @Min(value = 0)
+    @Max(value = 10)
     private int personalRating;
+
+    @NotNull
+    @PositiveOrZero
     private int episodesWatched;
 
     @Override

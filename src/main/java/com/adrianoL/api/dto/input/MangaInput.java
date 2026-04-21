@@ -1,6 +1,10 @@
 package com.adrianoL.api.dto.input;
 
+import com.adrianoL.config.validation.EnumPattern;
 import com.adrianoL.domain.model.enums.Status;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,14 +15,32 @@ import java.util.Set;
 @Setter
 public class MangaInput {
 
+    @NotBlank
     private String title;
-    private Status status;
+
+    @EnumPattern(enumClass = Status.class)
+    private String status;
+
+    @NotBlank
     private String description;
+
+    @NotBlank
     private String chapters;
+
+    @NotBlank
     private String volumes;
+
+    @NotBlank
     private String publishedFrom;
+
+    @NotBlank
     private String publishedTo;
+
+    @NotBlank
     private String author;
+
+    @NotNull
+    @Size(min = 1, message = "Manga must have at least 1 genre")
     private Set<UpdateResourceGenreInput> genres;
 
     @Override

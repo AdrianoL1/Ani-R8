@@ -1,6 +1,11 @@
 package com.adrianoL.api.dto.input;
 
+import com.adrianoL.config.validation.EnumPattern;
 import com.adrianoL.domain.model.enums.UserMangaStatus;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,9 +15,20 @@ import java.util.Objects;
 @Setter
 public class UpdateUsersMangaInput {
 
-    private UserMangaStatus status;
+    @EnumPattern(enumClass = UserMangaStatus.class)
+    private String status;
+
+    @NotNull
+    @Min(value = 0)
+    @Max(value = 10)
     private int personalRating;
+
+    @NotNull
+    @PositiveOrZero
     private int volumesRead;
+
+    @NotNull
+    @PositiveOrZero
     private int chaptersRead;
 
     @Override

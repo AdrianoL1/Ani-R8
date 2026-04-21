@@ -10,6 +10,7 @@ import com.adrianoL.domain.exception.ResourceNotFoundException;
 import com.adrianoL.domain.model.Anime;
 import com.adrianoL.domain.model.UserAnime;
 import com.adrianoL.domain.model.auth.User;
+import com.adrianoL.domain.model.enums.UserAnimeStatus;
 import com.adrianoL.domain.repository.UserAnimeRepository;
 import com.adrianoL.infrastructure.repository.UserListSpec;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import static com.adrianoL.api.dto_mapper.ObjectMapper.*;
@@ -54,13 +56,22 @@ public class UserAnimeService {
     @Transactional
     public UserAnimeDTO create(UserDTO user, UserAnimeInput userAnimeInput){
         var anime = animeService.findById(userAnimeInput.getAnimeId());
+        int totalWatched;
+
+        try{
+            int totalEps = Integer.parseInt(anime.getTotalEpisodes());
+
+            totalWatched = userAnimeInput.getEpisodesWatched() > totalEps ? totalEps : userAnimeInput.getEpisodesWatched();
+        }catch (Exception e) {
+            totalWatched = userAnimeInput.getEpisodesWatched();
+        }
 
         UserAnime userList = UserAnime.builder()
                 .user(parseObject(user, User.class))
                 .anime(parseObject(anime, Anime.class))
-                .status(userAnimeInput.getStatus())
+                .status(UserAnimeStatus.valueOf(userAnimeInput.getStatus()))
                 .personalRating(userAnimeInput.getPersonalRating())
-                .episodesWatched(userAnimeInput.getEpisodesWatched())
+                .episodesWatched(totalWatched)
                 .build();
 
         userAnimeRepository.save(userList);
