@@ -10,6 +10,8 @@ import com.adrianoL.domain.exception.ResourceNotFoundException;
 import com.adrianoL.domain.model.Manga;
 import com.adrianoL.domain.model.UserManga;
 import com.adrianoL.domain.model.auth.User;
+import com.adrianoL.domain.model.enums.UserAnimeStatus;
+import com.adrianoL.domain.model.enums.UserMangaStatus;
 import com.adrianoL.domain.repository.UserMangaRepository;
 import com.adrianoL.infrastructure.repository.UserListSpec;
 import lombok.RequiredArgsConstructor;
@@ -53,13 +55,27 @@ public class UserMangaService {
     public UserMangaDTO create(UserDTO user, UserMangaInput userMangaInput){
         var manga = mangaService.findById(userMangaInput.getMangaId());
 
+        int totalVolumesRead;
+        int totalChaptersRead;
+
+        try{
+            int totalChapters = Integer.parseInt(manga.getChapters());
+            int totalVolumes = Integer.parseInt(manga.getVolumes());
+
+            totalChaptersRead = userMangaInput.getChaptersRead() > totalChapters ? totalChapters : userMangaInput.getChaptersRead();
+            totalVolumesRead =  userMangaInput.getVolumesRead() > totalVolumes ? totalVolumes : userMangaInput.getVolumesRead();
+        }catch (Exception e){
+            totalVolumesRead = userMangaInput.getVolumesRead();
+            totalChaptersRead = userMangaInput.getChaptersRead();
+        }
+
         UserManga userList = UserManga.builder()
                 .user(parseObject(user, User.class))
                 .manga(parseObject(manga, Manga.class))
-                .status(userMangaInput.getStatus())
+                .status(UserMangaStatus.valueOf(userMangaInput.getStatus()))
                 .personalRating(userMangaInput.getPersonalRating())
-                .chaptersRead(userMangaInput.getChaptersRead())
-                .volumesRead(userMangaInput.getVolumesRead())
+                .chaptersRead(totalChaptersRead)
+                .volumesRead(totalVolumesRead)
                 .build();
 
         userMangaRepository.save(userList);

@@ -10,6 +10,7 @@ import com.adrianoL.domain.model.Image;
 import com.adrianoL.domain.service.AnimeService;
 import com.adrianoL.domain.service.ImageService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
@@ -52,7 +53,7 @@ public class AnimeController implements AnimeControllerDocs {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Override
-    public AnimeDTO createAnime(@RequestBody AnimeInput anime){
+    public AnimeDTO createAnime(@RequestBody @Valid AnimeInput anime){
         return animeService.create(anime);
     }
 
@@ -60,7 +61,7 @@ public class AnimeController implements AnimeControllerDocs {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Override
-    public AnimeDTO updateAnime(@PathVariable Long id, @RequestBody AnimeInput anime){
+    public AnimeDTO updateAnime(@PathVariable Long id, @RequestBody @Valid AnimeInput anime){
         return animeService.update(id, anime);
     }
 

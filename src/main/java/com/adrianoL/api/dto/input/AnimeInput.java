@@ -1,6 +1,10 @@
 package com.adrianoL.api.dto.input;
 
+import com.adrianoL.config.validation.EnumPattern;
 import com.adrianoL.domain.model.enums.Status;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,13 +15,29 @@ import java.util.Set;
 @Setter
 public class AnimeInput {
 
+    @NotBlank
     private String title;
-    private Status status;
+
+    @EnumPattern(enumClass = Status.class)
+    private String status;
+
+    @NotBlank
     private String description;
+
+    @NotBlank
     private String totalEpisodes;
+
+    @NotBlank
     private String airedFrom;
+
+    @NotBlank
     private String airedTo;
+
+    @NotBlank
     private String author;
+
+    @NotNull
+    @Size(min = 1)
     private Set<UpdateResourceGenreInput> genres;
 
     @Override

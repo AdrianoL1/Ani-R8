@@ -7,6 +7,7 @@ import com.adrianoL.api.dto.input.SigninInput;
 import com.adrianoL.domain.model.auth.User;
 import com.adrianoL.domain.service.AuthenticationService;
 import com.adrianoL.domain.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class AuthenticationController {
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO signUp(@RequestBody CreateUserInput createUserInput) {
+    public UserDTO signUp(@RequestBody @Valid CreateUserInput createUserInput) {
         User user = parseObject(createUserInput, User.class);
         user = userService.create(user);
         return parseObject(user, UserDTO.class);

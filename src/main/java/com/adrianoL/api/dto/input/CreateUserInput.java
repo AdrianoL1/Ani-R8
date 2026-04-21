@@ -1,5 +1,8 @@
 package com.adrianoL.api.dto.input;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,8 +12,13 @@ import java.util.Objects;
 @Setter
 public class CreateUserInput {
 
+    @Email
     private String email;
+
+    @NotBlank
     private String username;
+
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "Password must be at least 8 characters long and include both letters and numbers.")
     private String password;
 
     @Override
